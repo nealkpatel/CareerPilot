@@ -138,7 +138,7 @@ People only ever use the Netlify address. The Netlify site proxies `/api/*` and 
 
 1. Push this folder to a GitHub repository. `.gitignore` already leaves out the database, uploaded files, `.env` and browser profiles.
 2. In Netlify: **Add new site → Import an existing project → GitHub**, pick the repository. `netlify.toml` sets the publish folder (`web`) and the build command.
-3. **Site configuration → Environment variables**: add `CAREERPILOT_BACKEND_URL` = the server's HTTPS address from step 1 (for example `https://api.example.com`), then deploy. The build writes `web/_redirects` with the proxy rules from that variable; it fails with a clear message if the variable is missing.
+3. **Site configuration → Environment variables**: add `CAREERPILOT_BACKEND_URL` = the server's HTTPS address from step 1 (for example `https://api.example.com`), then deploy. The build writes `web/_redirects` with the proxy rules from that variable. Without the variable the site still deploys (front page, guides, FAQ), but the app answers "not connected to a CareerPilot server yet" until you add it and redeploy, so you can publish first and connect the server later.
 4. Open the Netlify address and create the first account, which becomes the master. From then on every push to GitHub redeploys the site; server-side changes are picked up by restarting CareerPilot on the server computer (pull, then `Restart-ScheduledTask CareerPilot`).
 
 ### Good to know

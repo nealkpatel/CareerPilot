@@ -1,0 +1,1 @@
+{"detail": "This site is not connected to a CareerPilot server yet. The owner sets CAREERPILOT_BACKEND_URL in Netlify (Site configuration → Environment variables) to the server's HTTPS address and redeploys."}
