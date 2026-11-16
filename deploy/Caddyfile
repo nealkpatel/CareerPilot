@@ -1,0 +1,12 @@
+# Caddy (https://caddyserver.com) gives the CareerPilot server an HTTPS address, which the Netlify site proxies to.
+# Replace api.example.com with a DNS name that points at this computer, then run:   caddy run --config deploy\Caddyfile
+# Caddy obtains and renews the certificate itself. Ports 80 and 443 must be reachable from the internet
+# (Windows Firewall and your hosting provider's firewall).
+
+api.example.com {
+    reverse_proxy 127.0.0.1:8000
+    request_body {
+        max_size 50MB
+    }
+    encode zstd gzip
+}

@@ -1,0 +1,18 @@
+# Netlify hosts the web app (the static files in web/) and proxies the API to the computer running the CareerPilot
+# server. See README → "Run it on the internet (Netlify + one Windows machine)".
+#
+# Required site environment variable (Site configuration → Environment variables):
+#   CAREERPILOT_BACKEND_URL = https://api.example.com   (the HTTPS address of the server computer)
+
+[build]
+  publish = "web"
+  command = "node netlify/build.mjs"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Static assets are fingerprint-free, so let browsers revalidate them on every load (same as the server does).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "no-cache"
