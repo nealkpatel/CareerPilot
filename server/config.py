@@ -33,6 +33,8 @@ PORT = int(os.environ.get("CAREERPILOT_PORT", "8000"))
 # The address people open when CareerPilot is published through Netlify (README → Run it on the internet),
 # e.g. https://careerpilot.netlify.app. Used for share links. Leave empty when people open this server directly.
 PUBLIC_URL = os.environ.get("CAREERPILOT_PUBLIC_URL", "").strip().rstrip("/")
+# Google Search Console "HTML tag" verification code (the content="…" value); rendered into the front page when set.
+GOOGLE_SITE_VERIFICATION = os.environ.get("CAREERPILOT_GOOGLE_SITE_VERIFICATION", "").strip()
 # Session cookies are HTTPS-only when the public address is HTTPS (override with CAREERPILOT_SECURE_COOKIES=0/1).
 SECURE_COOKIES = os.environ.get("CAREERPILOT_SECURE_COOKIES", "1" if PUBLIC_URL.startswith("https://") else "0") == "1"
 

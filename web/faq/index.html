@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CareerPilot FAQ: cost, DeepSeek account, privacy, templates</title>
+<meta name="description" content="Answers to the common questions about CareerPilot: what it costs, why it uses your own DeepSeek account instead of an API key, where your data lives, whether it applies for you, which templates and formats it supports, and how to install it.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="__PUBLIC_URL__/faq/">
+<meta name="theme-color" content="#2f5bea">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CareerPilot">
+<meta property="og:url" content="__PUBLIC_URL__/faq/">
+<meta property="og:title" content="CareerPilot FAQ: cost, DeepSeek account, privacy, templates">
+<meta property="og:description" content="What CareerPilot costs, why it uses your own DeepSeek account, where your data lives, whether it applies for you, and how to install it.">
+<meta property="og:image" content="__PUBLIC_URL__/assets/img/social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!--seo-extra-->
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/fonts/plus-jakarta-sans.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script>try{const t=localStorage.getItem('cp-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "BreadcrumbList", "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "CareerPilot", "item": "__PUBLIC_URL__/" },
+      { "@type": "ListItem", "position": 2, "name": "FAQ", "item": "__PUBLIC_URL__/faq/" } ] },
+    { "@type": "FAQPage", "@id": "__PUBLIC_URL__/faq/", "url": "__PUBLIC_URL__/faq/", "name": "CareerPilot FAQ", "isPartOf": { "@id": "__PUBLIC_URL__/#website" },
+      "mainEntity": [
+        { "@type": "Question", "name": "What does CareerPilot cost?", "acceptedAnswer": { "@type": "Answer", "text": "CareerPilot itself is free to run: you install it on a Windows computer you control. The only account it needs is a DeepSeek account for each person who generates documents, and DeepSeek's chat is free to use. There are no credits, subscriptions or API fees inside CareerPilot." } },
+        { "@type": "Question", "name": "Why does it use my own DeepSeek account instead of an API key?", "acceptedAnswer": { "@type": "Answer", "text": "So nobody has to buy or share API keys and so each person's usage stays theirs. You sign in to DeepSeek once, in a real Chrome window on the CareerPilot server that is shown to you live in the app; from then on your requests run on that account, one at a time in your own queue." } },
+        { "@type": "Question", "name": "Where is my data stored?", "acceptedAnswer": { "@type": "Answer", "text": "In a database on the computer that runs CareerPilot. Profiles, postings, generated documents and application history never go to any service other than DeepSeek, which receives the profile facts and the job posting through your own account in order to write the documents." } },
+        { "@type": "Question", "name": "Does CareerPilot apply to jobs for me?", "acceptedAnswer": { "@type": "Answer", "text": "No. It prepares a tailored résumé, cover letter and answers to application questions, and tracks the application afterwards. You (or your team) submit the application on the employer's site." } },
+        { "@type": "Question", "name": "Will the AI invent experience?", "acceptedAnswer": { "@type": "Answer", "text": "The profile fixes the facts: name, contact details, employers, dates, titles, education and certifications. The model only writes the summary, the skills list, the bullet points, the cover letter and the answers, and every reply is checked for completeness and regenerated when something is missing. Always read the result before sending it." } },
+        { "@type": "Question", "name": "Which résumé formats and templates are available?", "acceptedAnswer": { "@type": "Answer", "text": "Twelve single-column, ATS-friendly templates with a detailed style editor, plus your own uploaded HTML templates. Documents download as PDF, Word or plain text, and a résumé can be published at a 30-day share link." } },
+        { "@type": "Question", "name": "Can a team use one installation?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. A platform master approves accounts; admins own candidate profiles, prompts and templates and manage their bidders; bidders apply with the profiles assigned to them. Each person connects their own DeepSeek account." } },
+        { "@type": "Question", "name": "What do I need to install it?", "acceptedAnswer": { "@type": "Answer", "text": "One Windows computer that stays on, with Python and Google Chrome. The website can be hosted on Netlify while that computer serves the app, or everything can run on the one computer." } },
+        { "@type": "Question", "name": "Which job sites can it import from?", "acceptedAnswer": { "@type": "Answer", "text": "Any posting by URL: Greenhouse, Lever and Ashby through their public data, other sites through their structured JobPosting data, page text or a full browser render. The job pool also imports from Remote OK, Remotive, Jobicy, Himalayas, We Work Remotely and any Greenhouse, Lever or Ashby board." } },
+        { "@type": "Question", "name": "Does it work on a phone?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The app is responsive and has light and dark themes. Connecting your DeepSeek account also works from any device, because the sign-in window runs on the server and is shown to you live." } }
+      ] }
+  ]
+}
+</script>
+</head>
+<body class="site">
+<header class="site-head"><div class="site-wrap">
+  <a class="brand" href="/"><span class="brand-mark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="brand-name">CareerPilot</span></a>
+  <nav class="site-nav" aria-label="Main"><a href="/features/">Features</a><a href="/how-it-works/">How it works</a><a href="/for-teams/">For teams</a><a href="/guides/">Guides</a><a href="/faq/" aria-current="page">FAQ</a></nav>
+  <a class="btn primary" href="/#/">Open CareerPilot</a>
+</div></header>
+
+<main class="site-wrap prose">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> › <span>FAQ</span></nav>
+  <h1>Frequently asked questions</h1>
+  <p class="lead">Short answers about cost, the DeepSeek account, privacy, what the AI may and may not change, formats, teams and installation.</p>
+
+  <div class="faq">
+    <details open><summary>What does CareerPilot cost?</summary><p>CareerPilot itself is free to run: you install it on a Windows computer you control. The only account it needs is a DeepSeek account for each person who generates documents, and DeepSeek's chat is free to use. There are no credits, subscriptions or API fees inside CareerPilot.</p></details>
+    <details><summary>Why does it use my own DeepSeek account instead of an API key?</summary><p>So nobody has to buy or share API keys and so each person's usage stays theirs. You sign in to DeepSeek once, in a real Chrome window on the CareerPilot server that is shown to you live in the app; from then on your requests run on that account, one at a time in your own queue. You can reconnect, switch accounts or disconnect at any time.</p></details>
+    <details><summary>Where is my data stored?</summary><p>In a database on the computer that runs CareerPilot. Profiles, postings, generated documents and application history never go to any service other than DeepSeek, which receives the profile facts and the job posting through your own account in order to write the documents. Share links expose only the résumé, for 30 days, and can be revoked.</p></details>
+    <details><summary>Does CareerPilot apply to jobs for me?</summary><p>No. It prepares a tailored résumé, cover letter and answers to application questions, and tracks the application afterwards. You (or your team) submit the application on the employer's site.</p></details>
+    <details><summary>Will the AI invent experience?</summary><p>The profile fixes the facts: name, contact details, employers, dates, titles, education and certifications. The model only writes the summary, the skills list, the bullet points, the cover letter and the answers, and every reply is checked for completeness and regenerated in a new chat (up to three times) when something is missing. Always read the result before sending it; the editor lets you change anything without calling the AI again.</p></details>
+    <details><summary>Which résumé formats and templates are available?</summary><p>Twelve single-column, ATS-friendly templates (Jake's Classic, ATS Classic, Modern Minimal, Harvard Serif, Compact Engineer, Stanford, Accent Line, Developer Mono, Executive Serif, Clean Slate, Classy, Gradient Edge) with a detailed style editor, plus your own uploaded HTML templates. Documents download as PDF, Word or plain text, and a résumé can be published at a 30-day share link.</p></details>
+    <details><summary>Can a team use one installation?</summary><p>Yes. A platform master approves accounts; admins own candidate profiles, prompts and templates and manage their bidders; bidders apply with the profiles assigned to them. Each person connects their own DeepSeek account. See <a href="/for-teams/">CareerPilot for teams</a>.</p></details>
+    <details><summary>What do I need to install it?</summary><p>One Windows computer that stays on, with Python and Google Chrome. The website can be hosted on Netlify while that computer serves the app, or everything can run on the one computer and be opened at <code>http://localhost:8000</code>. The README in the project folder walks through both.</p></details>
+    <details><summary>Which job sites can it import from?</summary><p>Any posting by URL: Greenhouse, Lever and Ashby through their public data, other sites through their structured <code>JobPosting</code> data, page text or a full browser render for JavaScript-only pages. The job pool also imports from Remote OK, Remotive, Jobicy, Himalayas, We Work Remotely and any Greenhouse, Lever or Ashby board you add.</p></details>
+    <details><summary>Does it work on a phone?</summary><p>Yes. The app is responsive and has light and dark themes. Connecting your DeepSeek account also works from any device, because the sign-in window runs on the server and is shown to you live.</p></details>
+    <details><summary>What if DeepSeek asks me to sign in again?</summary><p>Your requests wait instead of failing, and a banner asks you to reconnect. Click it, sign in again in the live window, and the queue continues.</p></details>
+    <details><summary>Can I see it without connecting an AI account?</summary><p>Yes. The platform master can switch the AI engine to Demo mode, which produces placeholder documents instantly so you can explore the templates, the editor and the pipeline first.</p></details>
+  </div>
+
+  <p style="margin-top:28px">Still curious? Read <a href="/how-it-works/">how it works</a> or browse the <a href="/guides/">guides</a> on tailoring résumés, writing matching cover letters and tracking applications.</p>
+
+  <section class="cta">
+    <div><h2>Ready when you are</h2><p>Create an account, connect your DeepSeek account once, and tailor your first application.</p></div>
+    <a class="btn lg" href="/#/">Open CareerPilot</a>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="site-wrap">
+  <p>CareerPilot — free, self-hosted, runs with your own DeepSeek account.</p>
+  <nav><a href="/features/">Features</a><a href="/how-it-works/">How it works</a><a href="/for-teams/">For teams</a><a href="/guides/">Guides</a><a href="/faq/">FAQ</a><a href="/#/">Sign in</a></nav>
+</div></footer>
+</body>
+</html>

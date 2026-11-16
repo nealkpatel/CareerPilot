@@ -11,6 +11,17 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Optional, for Google Search Console:
+#   CAREERPILOT_PUBLIC_URL = https://www.example.com     (your custom domain, if the site has one)
+#   CAREERPILOT_GOOGLE_SITE_VERIFICATION = <the content value of the "HTML tag" method>
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+
 # Static assets are fingerprint-free, so let browsers revalidate them on every load (same as the server does).
 [[headers]]
   for = "/assets/*"

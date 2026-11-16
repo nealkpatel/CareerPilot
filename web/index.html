@@ -3,15 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CareerPilot</title>
-<meta name="description" content="CareerPilot — helping professionals navigate their careers.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232f5bea'/%3E%3Cpath d='M9 22l14-12-5 14-3-5z' fill='white'/%3E%3C/svg%3E">
+<title>CareerPilot – AI résumé tailoring and job application tracker</title>
+<meta name="description" content="CareerPilot tailors your résumé, cover letter and application answers to every job in minutes, then tracks each application from saved to signed offer. Free and self-hosted, powered by your own DeepSeek account — no API key.">
+<meta name="keywords" content="CareerPilot, Career Pilot, AI résumé tailoring, tailor resume to job description, AI cover letter generator, job application tracker, application answers, job search assistant, DeepSeek">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<!-- __PUBLIC_URL__ becomes the site's address at deploy time (netlify/build.mjs) or when the CareerPilot server serves this page. -->
+<link rel="canonical" href="__PUBLIC_URL__/">
+<meta name="application-name" content="CareerPilot">
+<meta name="apple-mobile-web-app-title" content="CareerPilot">
+<meta name="theme-color" content="#2f5bea">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CareerPilot">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="__PUBLIC_URL__/">
+<meta property="og:title" content="CareerPilot – AI résumé tailoring and job application tracker">
+<meta property="og:description" content="Tailor your résumé, cover letter and answers to every job in minutes — then track each application to the offer. Free and self-hosted, with your own DeepSeek account.">
+<meta property="og:image" content="__PUBLIC_URL__/assets/img/social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CareerPilot — tailor your résumé, cover letter and answers to every job, then track each application to the offer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CareerPilot – AI résumé tailoring and job application tracker">
+<meta name="twitter:description" content="Tailor your résumé, cover letter and answers to every job in minutes — then track each application to the offer. Free and self-hosted, with your own DeepSeek account.">
+<meta name="twitter:image" content="__PUBLIC_URL__/assets/img/social-card.png">
+<!--seo-extra-->
+<link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/plus-jakarta-sans/plus-jakarta-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/plus-jakarta-sans/plus-jakarta-sans-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/plus-jakarta-sans.css">
 <link rel="stylesheet" href="/assets/css/app.css">
 <script>try{const t=localStorage.getItem('cp-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "__PUBLIC_URL__/#website",
+      "url": "__PUBLIC_URL__/",
+      "name": "CareerPilot",
+      "alternateName": "Career Pilot",
+      "inLanguage": "en",
+      "description": "CareerPilot tailors your résumé, cover letter and application answers to every job in minutes, then tracks each application from saved to signed offer."
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "__PUBLIC_URL__/#app",
+      "name": "CareerPilot",
+      "url": "__PUBLIC_URL__/",
+      "image": "__PUBLIC_URL__/assets/img/social-card.png",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Job application assistant",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "A free, self-hosted web app for job seekers and the teams that apply on their behalf: AI-tailored résumés, cover letters and application answers for each posting, job link scraping, a job pool from public boards, and an application pipeline from saved to signed offer. Runs with your own DeepSeek account; no API key.",
+      "featureList": [
+        "AI-tailored résumé, cover letter and application answers for every job posting",
+        "Paste a job link and the posting is scraped automatically",
+        "Job pool fed by free public job boards",
+        "Application pipeline from saved to applied, screening, interview and offer",
+        "Shareable résumé links and PDF or Word downloads",
+        "Runs with your own DeepSeek account — no API key"
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+  <!-- What search engines and link previews read. The app replaces it the moment it starts. -->
+  <div class="auth">
+    <div class="auth-hero">
+      <div class="brand" style="padding:0"><div class="brand-mark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></div><div><div class="brand-name" style="color:#fff">CareerPilot</div></div></div>
+      <h1>Helping professionals navigate their careers.</h1>
+      <p class="lead">Tailor a résumé, cover letter and application answers to every role in minutes — then track each application from saved to signed offer.</p>
+      <ul>
+        <li><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg></span>AI tailoring for every role — résumé, cover letter and answers</li>
+        <li><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>Paste a job link and the posting is scraped for you</li>
+        <li><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10"/></svg></span>A job pool fed by free public job boards</li>
+        <li><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>A pipeline view from applied to offer</li>
+      </ul>
+    </div>
+    <div class="auth-form">
+      <div class="stack" style="width:100%;max-width:380px">
+        <h2>Sign in</h2>
+        <p class="muted">CareerPilot is starting…<noscript> It needs JavaScript to run.</noscript></p>
+        <p class="muted small">Learn more: <a href="/features/">Features</a> · <a href="/how-it-works/">How it works</a> · <a href="/for-teams/">For teams</a> · <a href="/guides/">Guides</a> · <a href="/faq/">FAQ</a></p>
+        <p class="muted small">CareerPilot is a free, self-hosted web app for job seekers and the teams that apply on their behalf. It tailors each résumé, cover letter and application answer to the posting with AI, runs on your own DeepSeek account with no API key, scrapes job links, keeps a job pool from public boards, and tracks every application through screening, interviews and offers.</p>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="toasts"></div>
 <script type="module" src="/assets/js/app.js"></script>
 </body>

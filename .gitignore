@@ -3,11 +3,7 @@ __pycache__/
 .venv/
 .env
 *.log
-data/*.db
-data/*.db-*
-data/files/
-data/backups/
-data/apply/
+data/
 .claude/launch.json
 # written by netlify/build.mjs at deploy time
 web/_redirects

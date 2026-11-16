@@ -747,3 +747,8 @@ hr.sep { border: 0; border-top: 1px solid var(--border); margin: 6px 0; width: 1
 .ds-live-hint { position: absolute; inset: 0; display: flex; gap: 10px; align-items: center; justify-content: center; color: #cbd5e1; font-size: 14px; background: rgba(11, 15, 26, .75); }
 .ds-live-hint[hidden] { display: none; }
 #dsTypeForm input { flex: 1; min-width: 0; }
+
+/* links from the sign-in hero to the public pages */
+.auth-hero .hero-links { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; opacity: .82; }
+.auth-hero .hero-links a { color: #fff; text-decoration: none; }
+.auth-hero .hero-links a:hover { text-decoration: underline; }

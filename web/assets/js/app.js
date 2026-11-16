@@ -76,6 +76,7 @@ function authHero() {
       <li><span>${icon('globe')}</span>A job pool fed by free public job boards</li>
       <li><span>${icon('activity')}</span>A pipeline view from applied to offer</li>
     </ul>
+    <nav class="hero-links" aria-label="About CareerPilot"><a href="/features/">Features</a><a href="/how-it-works/">How it works</a><a href="/for-teams/">For teams</a><a href="/guides/">Guides</a><a href="/faq/">FAQ</a></nav>
   </div>`;
 }
 

@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import auth, db, warnings
 from .auth import admin_user, current_user, master_user, worker_user
-from .config import SHARE_DAYS, WEB_DIR, PUBLIC_URL
+from .config import GOOGLE_SITE_VERIFICATION, SHARE_DAYS, WEB_DIR, PUBLIC_URL
 from .engine import prompts as P
 from .engine.worker import engine
 from .engine.signin import SignInError, SignIns
@@ -54,6 +54,8 @@ async def _no_stale_assets(request: Request, call_next):
     elif request.url.path.startswith("/api/"):
         # never let a CDN or the Netlify proxy cache an API answer
         response.headers.setdefault("Cache-Control", "no-store")
+    if request.url.path.startswith(("/api/", "/r/")):
+        response.headers.setdefault("X-Robots-Tag", "noindex")   # only the front page is for search engines
     return response
 
 
@@ -1713,8 +1715,50 @@ def _company_logo(company, url, job_id):
 app.mount("/assets", StaticFiles(directory=os.path.join(WEB_DIR, "assets")), name="assets")
 
 
+def _site_page(name, request):
+    """index.html, robots.txt or sitemap.xml with the site's own address filled in (the Netlify build does the same
+    at deploy time), so canonical links, the social preview and the sitemap point at the right place."""
+    with open(os.path.join(WEB_DIR, name), encoding="utf-8") as f:
+        text = f.read()
+    site = PUBLIC_URL or str(request.base_url).rstrip("/")
+    modified = datetime.fromtimestamp(os.path.getmtime(os.path.join(WEB_DIR, "index.html")), timezone.utc).strftime("%Y-%m-%d")
+    text = text.replace("__PUBLIC_URL__", site).replace("__LASTMOD__", modified)
+    tag = re.sub(r"[^A-Za-z0-9_-]", "", GOOGLE_SITE_VERIFICATION)
+    return text.replace("<!--seo-extra-->", f'<meta name="google-site-verification" content="{tag}">' if tag else "")
+
+
+def _public_page(path):
+    """web/<path>/index.html or web/<path>.html for a public page such as /features/ or /guides/…, else None."""
+    clean = path.strip("/")
+    if clean.endswith("/index.html"):
+        clean = clean[:-len("/index.html")]
+    if not clean or ".." in clean or clean.startswith(("assets/", "api/", "r/")):
+        return None
+    root = os.path.realpath(WEB_DIR)
+    for candidate in (os.path.join(clean, "index.html"), clean + ".html"):
+        full = os.path.realpath(os.path.join(root, candidate))
+        if full.startswith(root + os.sep) and os.path.isfile(full):
+            return candidate.replace(os.sep, "/")
+    return None
+
+
 @app.get("/{path:path}", include_in_schema=False)
-def spa(path: str):
+def spa(path: str, request: Request):
     if path.startswith("api/"):
         raise HTTPException(404, "Not found.")
-    return FileResponse(os.path.join(WEB_DIR, "index.html"), headers={"Cache-Control": "no-cache"})
+    if path in ("", "index.html"):
+        return HTMLResponse(_site_page("index.html", request), headers={"Cache-Control": "no-cache"})
+    page = _public_page(path)
+    if page:
+        return HTMLResponse(_site_page(page, request), headers={"Cache-Control": "no-cache"})
+    if path == "robots.txt":
+        return Response(_site_page(path, request), media_type="text/plain; charset=utf-8", headers={"Cache-Control": "public, max-age=3600"})
+    if path == "sitemap.xml":
+        return Response(_site_page(path, request), media_type="application/xml; charset=utf-8", headers={"Cache-Control": "public, max-age=3600"})
+    if path == "manifest.webmanifest":
+        return FileResponse(os.path.join(WEB_DIR, path), media_type="application/manifest+json", headers={"Cache-Control": "no-cache"})
+    if path == "favicon.ico":
+        return FileResponse(os.path.join(WEB_DIR, "assets", "img", "favicon.ico"), media_type="image/x-icon", headers={"Cache-Control": "public, max-age=604800"})
+    # The app has no other pages (its screens live behind #/…): a real 404 keeps search engines from indexing junk URLs.
+    with open(os.path.join(WEB_DIR, "404.html"), encoding="utf-8") as f:
+        return HTMLResponse(f.read(), status_code=404, headers={"X-Robots-Tag": "noindex"})

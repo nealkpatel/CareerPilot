@@ -107,6 +107,7 @@ Environment variables (all optional):
 | `CAREERPILOT_ENGINE_IDLE` | `600` | Close the browser after this many idle seconds |
 | `CAREERPILOT_PUBLIC_URL` | empty | The address people use when the site is published through Netlify (below). Used for share links; turns on HTTPS-only cookies |
 | `CAREERPILOT_SECURE_COOKIES` | `1` if the public URL is HTTPS | Mark session cookies HTTPS-only |
+| `CAREERPILOT_GOOGLE_SITE_VERIFICATION` | empty | Google Search Console "HTML tag" code; rendered into the front page (see Search engines below) |
 
 Instead of environment variables you can put `KEY=VALUE` lines in a `.env` file next to `run.py`.
 
@@ -151,6 +152,15 @@ People only ever use the Netlify address. The Netlify site proxies `/api/*` and 
 - Netlify's proxy gives up on requests that take longer than about 30 seconds. CareerPilot's long jobs (generation, job imports, sign-in checks) already run in the background and are polled, so normal use is unaffected.
 - On the server computer itself you can still open `http://localhost:8000` directly.
 
+### 3. Search engines (SEO)
+
+The front page is the only public page (everything else is behind sign-in, and résumé share links are deliberately kept out of search results), so that is what is tuned for Google:
+
+- **Built in**: a descriptive title and meta description, canonical URL, Open Graph and Twitter cards with a 1200×630 preview image (`web/assets/img/social-card.png`), structured data (`WebSite` + `WebApplication` JSON-LD), a static copy of the landing content in `index.html` that crawlers and link previews read before the app starts, `robots.txt`, `sitemap.xml`, a web app manifest with icons, real 404s for unknown addresses, and `noindex` on `/api/*` and `/r/*`. Public pages with their own titles, descriptions and structured data give search engines something to rank for the phrases people actually type: `/features/`, `/how-it-works/`, `/for-teams/`, `/faq/` (FAQ rich-result markup) and the guides under `/guides/` (tailoring a résumé to a job description, matching cover letters, application questions, tracking applications). They are plain HTML files in `web/`; edit them like any page, keep the `__PUBLIC_URL__` placeholders, and add new ones to `web/sitemap.xml`. The site address in all of these comes from `CAREERPILOT_PUBLIC_URL`, or from Netlify's own site URL when that variable is not set; deploy previews and branch deploys are marked `noindex` automatically.
+- **Custom domain**: ranking for the name is far easier on a domain that contains it (for example `careerpilot.app` or `getcareerpilot.com`). Add it in Netlify (**Domain management**), make it the primary domain, and set `CAREERPILOT_PUBLIC_URL` to it so canonical links, the sitemap and share links all use it.
+- **Google Search Console**: open [search.google.com/search-console](https://search.google.com/search-console), add a *URL prefix* property for the site address, choose the **HTML tag** method and copy the `content="…"` value into the Netlify environment variable `CAREERPILOT_GOOGLE_SITE_VERIFICATION` (or into `.env` on the server when it serves the site directly), redeploy, then click **Verify**. Afterwards submit `https://<your site>/sitemap.xml` under **Sitemaps** and use **URL inspection → Request indexing** for the front page once. Bing Webmaster Tools can import the verified property from Search Console.
+- **What helps most after that**: links to the site from places you control (GitHub repository description and website field, social profiles, a launch post), the exact brand name "CareerPilot" used consistently in those links, and keeping the page fast (it already ships local fonts and no third-party scripts). Searches for the generic phrases the page targets ("AI résumé tailoring", "tailor résumé to job description", "AI cover letter generator", "job application tracker") are competitive; the brand name is where a new site ranks first.
+
 ## Data and backups
 
 Everything is stored in `data/careerpilot.db` (SQLite). Back it up by copying that file while the server is stopped.
@@ -170,6 +180,8 @@ web/                       single-page app (no build step)
 data/templates/            built-in résumé templates
 netlify.toml, netlify/     Netlify site: publishes web/ and proxies /api to the server (see "Run it on the internet")
 deploy/                    Caddyfile (HTTPS for the server), autostart task installer, disconnect-rdp.cmd
+web/robots.txt, sitemap.xml, manifest.webmanifest, 404.html, assets/img/   search-engine files, icons and the social preview card
+web/features/, how-it-works/, for-teams/, faq/, guides/   public pages (plain HTML, styled by assets/css/site.css)
 server/engine/winremote.py live view of + real input into the DeepSeek sign-in window (Windows: PrintWindow, SendInput)
 ```
 
