@@ -217,11 +217,24 @@ def import_running():
     return _import_lock.locked()
 
 
+DEFAULT_INTERVAL_HOURS = 6   # imports run on their own unless the master sets "Manual only" (0)
+
+
+def interval_hours():
+    """How often the pool refreshes itself, in hours; 0 means only when the master clicks Import now."""
+    try:
+        return float(db.get_setting("jobpool_interval_hours", str(DEFAULT_INTERVAL_HOURS)) or 0)
+    except ValueError:
+        return float(DEFAULT_INTERVAL_HOURS)
+
+
 def _scheduler():
+    delay = 20   # first check soon after start-up (an import that was due while the server was off runs right away)
     while True:
-        time.sleep(60)
+        time.sleep(delay)
+        delay = 60
         try:
-            hours = float(db.get_setting("jobpool_interval_hours", "0") or 0)
+            hours = interval_hours()
             if hours <= 0:
                 continue
             last = db.get_setting("jobpool_last_import", "")

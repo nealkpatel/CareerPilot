@@ -1,11 +1,10 @@
 import { api } from '../api.js';
-import { html, raw, icon, mount, logo, statusBadge, genBadge, timeAgo, STATUS, emptyState } from '../ui.js';
+import { html, raw, icon, mount, logo, statusBadge, genBadge, timeAgo, STATUS, STATUS_COLORS, emptyState } from '../ui.js';
 import { go, engineLabel, connectDeepSeek } from '../app.js';
 import { lineChart, sparkline, funnel, segmentBar, seriesTable } from '../charts.js';
 
 const RANGES = [[7, '7D', 'Last 7 days'], [30, '30D', 'Last 30 days'], [90, '90D', 'Last 90 days']];
 const FUNNEL = [['added', 'Added'], ['applied', 'Applied'], ['screening', 'Screening'], ['interview', 'Interview'], ['offer', 'Offer']];
-const STATUS_COLORS = { saved: 'var(--cat-1)', ready: 'var(--cat-2)', applied: 'var(--cat-3)', screening: 'var(--cat-4)', interview: 'var(--cat-5)', offer: 'var(--cat-6)', rejected: 'var(--cat-7)', withdrawn: 'var(--cat-8)' };
 const day = (s, opts) => new Date(s + 'T00:00:00').toLocaleDateString(undefined, opts);
 
 // 90-day view reads better as weekly totals
@@ -14,7 +13,8 @@ function bucket(series, days) {
   const rows = [];
   for (let i = 0; i < series.length; i += 7) {
     const chunk = series.slice(i, i + 7);
-    rows.push({ day: chunk[0].day, end: chunk[chunk.length - 1].day, added: chunk.reduce((a, p) => a + p.added, 0), applied: chunk.reduce((a, p) => a + p.applied, 0), resumes: chunk.reduce((a, p) => a + p.resumes, 0) });
+    const statuses = Object.fromEntries(Object.keys(STATUS).map(s => [s, chunk.reduce((a, p) => a + (p.statuses?.[s] || 0), 0)]));
+    rows.push({ day: chunk[0].day, end: chunk[chunk.length - 1].day, added: chunk.reduce((a, p) => a + p.added, 0), applied: chunk.reduce((a, p) => a + p.applied, 0), resumes: chunk.reduce((a, p) => a + p.resumes, 0), statuses });
   }
   return { labels: rows.map(r => day(r.day, { month: 'short', day: 'numeric' })), titles: rows.map(r => `Week of ${day(r.day, { month: 'short', day: 'numeric' })} – ${day(r.end, { month: 'short', day: 'numeric' })}`), rows };
 }
@@ -124,13 +124,11 @@ export default async function ({ el, user, isCurrent }) {
 
     // ---- activity chart / table
     const b = bucket(A.series, days);
-    const series = [
-      { label: 'Added', color: 'var(--viz-1)', values: b.rows.map(r => r.added) },
-      { label: 'Applied', color: 'var(--viz-2)', values: b.rows.map(r => r.applied) },
-    ];
+    // one line per status: how many applications entered it each day (Saved = added)
+    const series = Object.keys(STATUS).map(s => ({ label: STATUS[s].label, color: STATUS_COLORS[s], values: b.rows.map(r => r.statuses?.[s] || 0) }));
     const act = el.querySelector('#activity');
     if (tableView) seriesTable(act, b.titles, series);
-    else cleanups.push(lineChart(act, { labels: b.labels, tooltipTitles: b.titles, series, height: 330, ariaLabel: `Applications added and applied, ${rangeLabel}` }));
+    else cleanups.push(lineChart(act, { labels: b.labels, tooltipTitles: b.titles, series, height: 330, ariaLabel: `Applications by status, ${rangeLabel}` }));
     // summary strip: what the chart adds up to
     const totalAdded = A.series.reduce((a, p) => a + p.added, 0), totalApplied = A.series.reduce((a, p) => a + p.applied, 0);
     const busiest = A.series.reduce((best, p) => (p.added + p.applied > best.added + best.applied ? p : best), A.series[0] || { added: 0, applied: 0 });

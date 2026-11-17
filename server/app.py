@@ -208,7 +208,7 @@ def get_settings(user=Depends(current_user)):
         out["platform"] = {
             "registration_mode": _registration_mode(),
             "engine_mode": "demo" if engine.mode() == "demo" else "live",
-            "jobpool_interval_hours": db.get_setting("jobpool_interval_hours", "0"),
+            "jobpool_interval_hours": str(job_pool.interval_hours()),
         }
     return out
 
@@ -1100,6 +1100,21 @@ def public_resume(token: str):
 _STAGE_RANK = {"saved": 0, "ready": 1, "applied": 2, "screening": 3, "interview": 4, "offer": 5}
 
 
+def _status_days(since_day, uid=None):
+    """How many applications entered each status on each day since `since_day`, from the status history:
+    {status: {day: n}}, for one user's applications or (uid None) for everyone's."""
+    sql = """SELECT h.status, substr(h.created_at,1,10) AS d, COUNT(*) AS n FROM status_history h
+             JOIN applications a ON a.id = h.application_id WHERE substr(h.created_at,1,10) >= ?"""
+    params = [since_day]
+    if uid is not None:
+        sql += " AND a.user_id = ?"
+        params.append(uid)
+    out = {s: {} for s in APP_STATUSES}
+    for r in db.query(sql + " GROUP BY h.status, d", params):
+        out.setdefault(r["status"], {})[r["d"]] = r["n"]
+    return out
+
+
 def _analytics(uid, days):
     """KPIs for a date range plus the previous period of equal length, daily series, funnel and status mix."""
     today = datetime.now(timezone.utc).date()
@@ -1153,6 +1168,7 @@ def _analytics(uid, days):
     def rate(sub_from, sub_to):
         return round(100 * sub_to / sub_from) if sub_from else None
 
+    by_status = _status_days(lo, uid)   # one line per status in the activity chart
     # response rate: applications applied in the window that later reached screening or beyond
     applied_ids = [r["id"] for r in db.query("SELECT id FROM applications WHERE user_id = ? AND applied_at IS NOT NULL AND substr(applied_at,1,10) BETWEEN ? AND ?", (uid, *cur))]
     responded = 0
@@ -1168,7 +1184,8 @@ def _analytics(uid, days):
             "interviews": metric(interviews), "offers": metric(offers),
             "response_rate": {"value": rate(len(applied_ids), responded), "responded": responded, "applied": len(applied_ids)},
         },
-        "series": [{"day": d, "added": created.get(d, 0), "applied": applied.get(d, 0), "resumes": resumes.get(d, 0)} for d in day_list],
+        "series": [{"day": d, "added": created.get(d, 0), "applied": applied.get(d, 0), "resumes": resumes.get(d, 0),
+                    "statuses": {s: by_status[s].get(d, 0) for s in APP_STATUSES}} for d in day_list],
         "funnel": [{"stage": k, "count": v} for k, v in reached.items()],
         "conversion": {"applied": rate(reached["added"], reached["applied"]), "screening": rate(reached["applied"], reached["screening"]),
                        "interview": rate(reached["screening"], reached["interview"]), "offer": rate(reached["interview"], reached["offer"])},
@@ -1236,6 +1253,7 @@ def platform_overview(user=Depends(master_user)):
     created = {r["d"]: r["n"] for r in db.query("SELECT substr(created_at,1,10) AS d, COUNT(*) AS n FROM applications WHERE created_at >= ? GROUP BY d", (since,))}
     gens_by_day = {r["d"]: r["n"] for r in db.query("SELECT substr(created_at,1,10) AS d, COUNT(*) AS n FROM generations WHERE kind = 'ai' AND created_at >= ? GROUP BY d", (since,))}
     days = [(datetime.now(timezone.utc) - timedelta(days=i)).date().isoformat() for i in range(29, -1, -1)]
+    by_status = _status_days(since)
     g = db.query_one("""SELECT SUM(status = 'completed') AS done, SUM(status = 'failed') AS failed,
                         SUM(status IN ('queued','generating')) AS active, SUM(created_at >= ?) AS today
                         FROM generations WHERE kind = 'ai'""", (day_ago,))
@@ -1252,7 +1270,8 @@ def platform_overview(user=Depends(master_user)):
         "pending": pending,
         "applications": db.query_one("SELECT COUNT(*) AS n FROM applications")["n"],
         "generations": {"completed": g["done"] or 0, "failed": g["failed"] or 0, "active": g["active"] or 0, "last_24h": g["today"] or 0},
-        "series": [{"day": d, "created": created.get(d, 0), "applied": gens_by_day.get(d, 0)} for d in days],
+        "series": [{"day": d, "created": created.get(d, 0), "applied": gens_by_day.get(d, 0), "resumes": gens_by_day.get(d, 0),
+                    "statuses": {s: by_status[s].get(d, 0) for s in APP_STATUSES}} for d in days],
         "admins": admins,
         "jobs": db.query_one("SELECT COUNT(*) AS n FROM jobs")["n"],
         "last_import": db.get_setting("jobpool_last_import", ""),
@@ -1475,7 +1494,7 @@ def mark_job(jid: int, body: dict = Body(...), user=Depends(current_user)):
 def list_sources(user=Depends(master_user)):
     rows = db.query("SELECT s.*, (SELECT COUNT(*) FROM jobs j WHERE j.source_id = s.id) AS jobs FROM job_sources s WHERE provider != 'jobright' ORDER BY provider, name")
     return {"sources": rows, "providers": job_pool.PROVIDERS, "importing": job_pool.import_running(),
-            "interval_hours": db.get_setting("jobpool_interval_hours", "0"), "last_import": db.get_setting("jobpool_last_import", "")}
+            "interval_hours": str(job_pool.interval_hours()), "last_import": db.get_setting("jobpool_last_import", "")}
 
 
 @app.post("/api/job-sources")

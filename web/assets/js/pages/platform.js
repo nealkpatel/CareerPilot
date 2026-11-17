@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { html, raw, icon, mount, timeAgo, fmtDate, initials, colorFor, toast, toastError, emptyState } from '../ui.js';
+import { html, raw, icon, mount, timeAgo, fmtDate, initials, colorFor, toast, toastError, emptyState, STATUS, STATUS_COLORS } from '../ui.js';
 import { lineChart } from '../charts.js';
 const dlabel = (s, o) => new Date(s + 'T00:00:00').toLocaleDateString(undefined, o);
 
@@ -53,9 +53,11 @@ export default async function ({ el, user, isCurrent }) {
     const narrow = () => ['#r1', '#r2'].forEach(s => { const r = el.querySelector(s); if (r) r.style.gridTemplateColumns = innerWidth < 1100 ? 'minmax(0,1fr)' : 'minmax(0,1.6fr) minmax(0,1fr)'; });
     narrow();
     stopChart?.();
-    stopChart = lineChart(el.querySelector('#platChart'), { height: 230, ariaLabel: 'Platform activity, last 30 days',
+    // one line per application status (how many entered it that day) plus AI résumés produced
+    stopChart = lineChart(el.querySelector('#platChart'), { height: 300, ariaLabel: 'Platform activity by status, last 30 days',
       labels: d.series.map(p => dlabel(p.day, { month: 'short', day: 'numeric' })), tooltipTitles: d.series.map(p => dlabel(p.day, { weekday: 'short', month: 'short', day: 'numeric' })),
-      series: [{ label: 'Applications', color: 'var(--viz-1)', values: d.series.map(p => p.created) }, { label: 'AI résumés', color: 'var(--viz-2)', values: d.series.map(p => p.applied) }] });
+      series: [...Object.keys(STATUS).map(s => ({ label: STATUS[s].label, color: STATUS_COLORS[s], values: d.series.map(p => p.statuses?.[s] || 0) })),
+               { label: 'AI résumés', color: 'var(--viz-2)', values: d.series.map(p => p.resumes ?? p.applied) }] });
     el.querySelectorAll('[data-approve]').forEach(b => b.onclick = async () => {
       try { await api.put(`/api/users/${b.dataset.approve}`, { status: 'active' }); toast('Account approved'); draw(); } catch (err) { toastError(err); }
     });

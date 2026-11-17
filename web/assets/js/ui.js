@@ -131,6 +131,8 @@ export const STATUS = {
   rejected: { label: 'Rejected', color: 'var(--red)' },
   withdrawn: { label: 'Withdrawn', color: 'var(--text-3)' },
 };
+// one distinct chart colour per status (the badge colours above are too alike for lines side by side)
+export const STATUS_COLORS = { saved: 'var(--cat-1)', ready: 'var(--cat-2)', applied: 'var(--cat-3)', screening: 'var(--cat-4)', interview: 'var(--cat-5)', offer: 'var(--cat-6)', rejected: 'var(--cat-7)', withdrawn: 'var(--cat-8)' };
 export const statusBadge = (s) => html`<span class="badge ${s}"><span class="dot"></span>${STATUS[s]?.label || s}</span>`;
 const GEN = { queued: 'Queued', generating: 'Generating', completed: 'Ready', failed: 'Failed', cancelled: 'Cancelled' };
 export const genBadge = (g) => g ? html`<span class="badge ${g.status}">${g.status === 'generating' ? raw('<span class="spinner" style="width:11px;height:11px"></span>') : ''}${GEN[g.status] || g.status}</span>` : html`<span class="muted small">—</span>`;
